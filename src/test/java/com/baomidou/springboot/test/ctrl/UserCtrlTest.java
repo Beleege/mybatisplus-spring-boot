@@ -1,6 +1,9 @@
 package com.baomidou.springboot.test.ctrl;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.springboot.entity.User;
 import com.baomidou.springboot.entity.enums.AgeEnum;
 import com.baomidou.springboot.service.IUserService;
@@ -51,7 +54,12 @@ public class UserCtrlTest extends TestBase {
 
     @Test
     public void test() {
-        List<User> u = userService.selectByName("a");
+        User condition = new User();
+        condition.setName("Beleege");
+        Wrapper<User> wrapper = new EntityWrapper<>(condition);
+
+        List<User> u = userService.selectList(wrapper);
+//        List<User> u = userService.selectByName("a");
         log.info("=============================================");
         log.info(JSON.toJSONString(u));
         log.info("=============================================");
@@ -60,7 +68,35 @@ public class UserCtrlTest extends TestBase {
     @Test
     public void addTest() {
         User u = new User("张晓龙", AgeEnum.ONE, 123);
-        userService.insert(u);
+        for(int i=0; i<100; i++) {
+            u.setName("张晓龙" + i);
+            u.setAge((i % 2 == 0) ? AgeEnum.ONE : AgeEnum.TWO);
+            u.setTestType(i % 10);
+            userService.insert(u);
+        }
+
+    }
+
+    @Test
+    public void updateTest() {
+        User u = userService.selectById(50);
+        u.setName("Beleege");
+        userService.insertOrUpdate(u);
+    }
+
+    @Test
+    public void pageTest() {
+        Page<User> page = new Page<>();
+        User condition = new User();
+        condition.setAge(AgeEnum.TWO);
+        Wrapper<User> wrapper = new EntityWrapper<>(condition);
+
+        page.setCurrent(1);
+        page.setSize(10);
+        page = userService.selectPage(page, wrapper);
+        System.out.println("-------------------------------------------------------");
+        System.out.println("page = " + JSON.toJSONString(page));
+        System.out.println("-------------------------------------------------------");
     }
 
 }
