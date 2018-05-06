@@ -33,7 +33,7 @@
 		<mybatisplus.version>2.1.8</mybatisplus.version>
 		<HikariCP.version>2.4.13</HikariCP.version>
 		<fastjson.version>1.2.39</fastjson.version>
-		<docker.image.prefix>mybatis-plus</docker.image.prefix>
+		<docker.image.prefix>192.168.62.129:8888</docker.image.prefix>
 	</properties>
 
 	<dependencies>
@@ -114,22 +114,30 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 
-			<plugin>
-				<groupId>com.spotify</groupId>
-				<artifactId>docker-maven-plugin</artifactId>
-				<version>0.4.13</version>
-				<configuration>
-					<imageName>${docker.image.prefix}/${project.artifactId}</imageName>
-					<dockerDirectory>src/main/docker</dockerDirectory>
-					<resources>
-						<resource>
-							<targetPath>/</targetPath>
-							<directory>${project.build.directory}</directory>
-							<include>${project.build.finalName}.jar</include>
-						</resource>
-					</resources>
-				</configuration>
-			</plugin>
+
+            <!-- 打包Docker -->
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.4.13</version>
+                <configuration>
+                    <serverId>nexus</serverId>
+                    <registryUrl>http://192.168.62.129:8888</registryUrl>
+                    <pushImage>true</pushImage>
+                    <dockerDirectory>src/main/docker</dockerDirectory>
+                    <imageName>${docker.image.prefix}/${project.artifactId}</imageName>
+                    <imageTags>
+                        <imageTag>latest</imageTag>
+                    </imageTags>
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <directory>${project.build.directory}</directory>
+                            <include>${project.build.finalName}.jar</include>
+                        </resource>
+                    </resources>
+                </configuration>
+            </plugin>
 		</plugins>
 	</build>
 </project>
