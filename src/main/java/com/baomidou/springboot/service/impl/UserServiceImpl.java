@@ -27,4 +27,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 		return baseMapper.selectListBySQL();
 	}
 
+	@Override
+	public List<User> selectByName(String name) {
+		return baseMapper.selectLikeName(name);
+	}
+
 }

@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<configuration debug="false">
+    <contextName>xstore-community-center</contextName>
+    <!--项目名 -->
+    <property name="logback.project.name" value="mybatis-plus" />
+    <!--日志路径-->
+    <property name="logback.file.path" value="E:/Temp/log/mybatis-plus" />
+    <!--输出日志格式-->
+    <property name="logback.pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n"/>
+    <!--日志文件名的日期格式 -->
+    <timestamp key="byDay" datePattern="yyyyMMdd" />
+    <!-- 控制台日志 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder charset="UTF-8">
+            <pattern>${logback.pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <!--debug-->
+    <appender name="FILE-DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender" additivity="false">
+        <File>${logback.file.path}/file-debug.log</File>
+        <encoder charset="UTF-8">
+            <pattern>${logback.pattern}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logback.file.path}/file-debug.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>200MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <!--error-->
+    <appender name="FILE-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender" additivity="false">
+        <!-- 过滤器，一个appender可以有多个 -->
+        <!-- 阈值过滤，就是log行为级别过滤，debug及debug以上的信息会被打印出来 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <File>${logback.file.path}/file-error.log</File>
+        <encoder charset="UTF-8">
+            <pattern>${logback.pattern}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logback.file.path}/file-error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>200MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <!--只打印jmq和jsf的ERROR日志-->
+    <logger name="com.jd.jsf" level="ERROR" />
+    <logger name="com.jd.jmq" level="ERROR" />
+
+    <!--测试环境-->
+    <springProfile name="dev">
+        <property name="logback.log.level" value="DEBUG" />
+    </springProfile>
+    <!--生产环境-->
+    <springProfile name="prod">
+        <property name="logback.log.level" value="INFO" />
+    </springProfile>
+
+    <logger name="java.sql" level="${logback.log.level}" />
+    <logger name="org.mybatis" level="${logback.log.level}" />
+    <root level="${logback.log.level}">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE-DEBUG" />
+        <appender-ref ref="FILE-ERROR" />
+    </root>
+
+</configuration>

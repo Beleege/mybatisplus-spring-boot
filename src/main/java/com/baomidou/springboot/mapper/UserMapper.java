@@ -24,4 +24,7 @@ public interface UserMapper extends SuperMapper<User> {
     @Select("select test_id as id, name, age, test_type from user")
     List<User> selectListBySQL();
 
+
+    List<User> selectLikeName(String name);
+
 }

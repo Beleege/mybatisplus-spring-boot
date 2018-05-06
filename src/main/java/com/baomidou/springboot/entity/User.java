@@ -30,8 +30,6 @@ public class User extends SuperEntity<User> {
     /**
      * 这里故意演示注解可无
      */
-    @TableField("test_type")
-    @TableLogic
     private Integer testType;
 
     /**

@@ -10,4 +10,8 @@
 	<delete id="deleteAll">
 		DELETE FROM USER
 	</delete>
+
+	<select id="selectLikeName" parameterType="java.lang.String" resultType="com.baomidou.springboot.entity.User">
+		select * from user where name like concat('%', #{name}, '%');
+	</select>
 </mapper>
